@@ -5,14 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Servicios {
-    //Completar con las estructuras y métodos privados que se 
-    //requieran. 
+    
     private final Map<Integer, Camion> camiones;
     private final Map<String, Paquete> paquetes;
     private final List<Paquete> conAlimentos;
     private final List<Paquete> sinAlimentos;
+    private final TreeMap<Integer, List<Paquete>> paquetesPorUrgencia;
  
     /* 
      * Complejidad Temporal: O(n) -n siendo la suma de paquetes y camiones
@@ -22,6 +23,7 @@ public class Servicios {
         paquetes = new HashMap<>();
         conAlimentos = new ArrayList<>();
         sinAlimentos = new ArrayList<>();
+        paquetesPorUrgencia = new TreeMap<>();
 
         try{
             cargarCamiones(pathCamiones);
@@ -52,15 +54,14 @@ public class Servicios {
     } 
  
     /* 
-     * Complejidad temporal: O(n) -n siendo la cantidad de paquetes en el HashMap 
-     */ 
+     * Complejidad temporal: O(log k + r) - log k siendo la navegacion del arbol, 
+     * y r los paquetes dentro del rango que se agregan a la respuesta
+    */
     public List<Paquete> servicio3(int urgenciaMinima, int urgenciaMaxima){ 
         List<Paquete> retorno = new ArrayList<>();
-        for(Paquete p : paquetes.values()){
-            int urgencia = p.getUrgencia();
-            if(urgencia >= urgenciaMinima && urgencia <= urgenciaMaxima){
-                retorno.add(p);
-            }
+        for (List<Paquete> lista : 
+            paquetesPorUrgencia.subMap(urgenciaMinima, true, urgenciaMaxima, true).values()) {
+            retorno.addAll(lista);
         }
         return retorno;
     }
@@ -98,7 +99,12 @@ public class Servicios {
                     conAlimentos.add(paquete);
                 }else{
                     sinAlimentos.add(paquete);
-                }     
+                }  
+                
+                if (!paquetesPorUrgencia.containsKey(urgencia)) {
+                    paquetesPorUrgencia.put(urgencia, new ArrayList<>());
+                }
+                paquetesPorUrgencia.get(urgencia).add(paquete);
             }
         }
     }
