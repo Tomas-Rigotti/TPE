@@ -108,4 +108,11 @@ public class Servicios {
             }
         }
     }
+
+    public Map<Integer, Camion> getCamiones() {
+        return camiones;
+    }
+    public Map<String, Paquete> getPaquetes() {
+        return paquetes;
+    }
 }
