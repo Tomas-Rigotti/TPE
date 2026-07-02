@@ -46,7 +46,7 @@ public class Backtracking {
 
         if (indicePaquete == paquetes.size()) {
             estadosGenerados++;
-            int pesoSinAsignar = calcularPesoSinAsignar();
+            int pesoSinAsignar = calcularPesoSinAsignar(indicePaquete);
             if (pesoSinAsignar < mejorPesoSinAsignar) {
                 mejorPesoSinAsignar = pesoSinAsignar;
                 mejorAsignacion = Arrays.copyOf(asignacionActual, asignacionActual.length);
@@ -54,7 +54,7 @@ public class Backtracking {
             return;
         }
         
-        int pesoActualSinAsignar = calcularPesoSinAsignar();
+        int pesoActualSinAsignar = calcularPesoSinAsignar(indicePaquete);
         if (pesoActualSinAsignar >= mejorPesoSinAsignar){
             return;
         }
@@ -92,9 +92,9 @@ public class Backtracking {
         return true;
     }
 
-    private int calcularPesoSinAsignar() {
+    private int calcularPesoSinAsignar(int indicePaquete) {
         int peso = 0;
-        for (int i = 0; i < paquetes.size(); i++) {
+        for (int i = 0; i < indicePaquete; i++) {
             if (asignacionActual[i] == -1) {
                 peso += paquetes.get(i).getPeso();
             }
